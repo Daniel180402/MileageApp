@@ -51,7 +51,7 @@ export const StatsDashboard = ({ entries }) => {
 
     if (entriesWithFinal.length > 0) {
       const totalValidEst = entriesWithFinal.reduce((acc, curr) => acc + curr.reach, 0);
-      const totalValidActual = entriesWithFinal.reduce((acc, curr) => acc + (curr.finalMileage - curr.mileage), 0);
+      const totalValidActual = entriesWithFinal.reduce((acc, curr) => acc + (curr.finalMileage - curr.mileage + (curr.remainingReach || 0)), 0);
       
       accuracy = totalValidEst > 0 ? ((totalValidActual / totalValidEst) * 100).toFixed(1) : 0;
       avgDiff = ((totalValidActual - totalValidEst) / entriesWithFinal.length).toFixed(1);
@@ -73,7 +73,7 @@ export const StatsDashboard = ({ entries }) => {
     
     const actualReachData = labels.map(l => {
       const monthEntries = filtered.filter(e => format(new Date(e.date), 'MMM yyyy') === l);
-      return monthEntries.reduce((sum, e) => sum + (e.finalMileage ? (e.finalMileage - e.mileage) : 0), 0);
+      return monthEntries.reduce((sum, e) => sum + (e.finalMileage ? (e.finalMileage - e.mileage + (e.remainingReach || 0)) : 0), 0);
     });
 
     return {

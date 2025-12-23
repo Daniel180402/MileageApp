@@ -45,14 +45,15 @@ export const HistoryList = ({ entries, onEdit, onDelete }) => {
                 {entry.finalMileage && (
                   <div style={{ fontSize: '0.8rem', marginTop: '0.2rem' }}>
                     Actual: <span style={{ color: 'var(--text-primary)' }}>{entry.finalMileage - entry.mileage}</span>
+                    {entry.remainingReach && <span> + {entry.remainingReach}</span>}
                      
                     <span style={{ 
                       marginLeft: '0.5rem',
                       fontWeight: 700,
-                      color: (entry.finalMileage - entry.mileage - entry.reach) >= 0 ? 'var(--success)' : 'var(--danger)'
+                      color: ((entry.finalMileage - entry.mileage + (entry.remainingReach || 0)) - entry.reach) >= 0 ? 'var(--success)' : 'var(--danger)'
                     }}>
-                      ({(entry.finalMileage - entry.mileage - entry.reach) > 0 ? '+' : ''}
-                      {entry.finalMileage - entry.mileage - entry.reach})
+                      ({((entry.finalMileage - entry.mileage + (entry.remainingReach || 0)) - entry.reach) > 0 ? '+' : ''}
+                      {(entry.finalMileage - entry.mileage + (entry.remainingReach || 0)) - entry.reach})
                     </span>
                   </div>
                 )}

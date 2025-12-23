@@ -9,6 +9,7 @@ export const AddEntry = ({ onSave, initialData, onCancel }) => {
     reach: '',   // Trip Distance
     cost: '',    // Cost
     finalMileage: '',
+    remainingReach: '',
     isPrecise: true,
     notes: ''
   });
@@ -37,7 +38,8 @@ export const AddEntry = ({ onSave, initialData, onCancel }) => {
       mileage: Number(formData.mileage),
       reach: Number(formData.reach),
       cost: Number(formData.cost),
-      finalMileage: formData.finalMileage ? Number(formData.finalMileage) : null
+      finalMileage: formData.finalMileage ? Number(formData.finalMileage) : null,
+      remainingReach: formData.remainingReach ? Number(formData.remainingReach) : null
     });
   };
 
@@ -122,7 +124,7 @@ export const AddEntry = ({ onSave, initialData, onCancel }) => {
             <label className="input-label" style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>
               Final Odometer (End of Tank)
             </label>
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative', marginBottom: '1rem' }}>
               <Gauge size={18} style={{ position: 'absolute', left: '12px', top: '14px', color: 'var(--text-muted)' }} />
               <input 
                 type="number" 
@@ -134,16 +136,39 @@ export const AddEntry = ({ onSave, initialData, onCancel }) => {
                 onChange={handleChange} 
               />
             </div>
+
+            <label className="input-label" style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>
+              Remaining Reach (Optional)
+            </label>
+            <div style={{ position: 'relative' }}>
+              <Activity size={18} style={{ position: 'absolute', left: '12px', top: '14px', color: 'var(--text-muted)' }} />
+              <input 
+                type="number" 
+                name="remainingReach" 
+                className="input-field" 
+                placeholder="Km left..."
+                style={{ paddingLeft: '40px' }}
+                value={formData.remainingReach || ''} 
+                onChange={handleChange} 
+              />
+            </div>
+
             {formData.finalMileage && (
-              <div style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
-                Actual Reach: <strong style={{ color: 'var(--text-primary)' }}>{Number(formData.finalMileage) - Number(formData.mileage)} km</strong>
+              <div style={{ marginTop: '1rem', fontSize: '0.875rem' }}>
+                Actual Distance: <strong style={{ color: 'var(--text-primary)' }}>{Number(formData.finalMileage) - Number(formData.mileage)} km</strong>
                 <br />
+                {formData.remainingReach && (
+                  <>
+                  Total Potential: <strong>{(Number(formData.finalMileage) - Number(formData.mileage)) + Number(formData.remainingReach)} km</strong>
+                  <br />
+                  </>
+                )}
                 Difference: <span style={{ 
-                  color: (Number(formData.finalMileage) - Number(formData.mileage) - Number(formData.reach)) >= 0 ? 'var(--success)' : 'var(--danger)',
+                  color: ((Number(formData.finalMileage) - Number(formData.mileage) + (formData.remainingReach ? Number(formData.remainingReach) : 0)) - Number(formData.reach)) >= 0 ? 'var(--success)' : 'var(--danger)',
                   fontWeight: 600 
                 }}>
-                  {((Number(formData.finalMileage) - Number(formData.mileage)) - Number(formData.reach)) > 0 ? '+' : ''}
-                  {(Number(formData.finalMileage) - Number(formData.mileage)) - Number(formData.reach)} km
+                  {((Number(formData.finalMileage) - Number(formData.mileage) + (formData.remainingReach ? Number(formData.remainingReach) : 0)) - Number(formData.reach)) > 0 ? '+' : ''}
+                  {(Number(formData.finalMileage) - Number(formData.mileage) + (formData.remainingReach ? Number(formData.remainingReach) : 0)) - Number(formData.reach)} km
                 </span>
               </div>
             )}
